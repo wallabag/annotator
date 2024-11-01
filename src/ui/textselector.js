@@ -79,11 +79,6 @@ TextSelector.prototype.captureDocumentSelection = function () {
         }
     }
 
-    // BrowserRange#normalize() modifies the DOM structure and deselects the
-    // underlying text as a result. So here we remove the selected ranges and
-    // reapply the new ones.
-    selection.removeAllRanges();
-
     for (i = 0, len = rangesToIgnore.length; i < len; i++) {
         selection.addRange(rangesToIgnore[i]);
     }
