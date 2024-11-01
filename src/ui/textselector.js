@@ -32,10 +32,9 @@ function TextSelector(element, options) {
         var self = this;
         this.document = this.element.ownerDocument;
 
-        $(this.document.body)
-            .on("mouseup." + TEXTSELECTOR_NS, function (e) {
-                self._checkForEndSelection(e);
-            });
+        document.addEventListener("pointerup", (e) => {
+            self._checkForEndSelection(e);
+        });
     } else {
         console.warn("You created an instance of the TextSelector on an " +
                      "element that doesn't have an ownerDocument. This won't " +
