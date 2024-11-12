@@ -73,7 +73,7 @@ var Adder = Widget.extend({
     show: function (position) {
         if (typeof position !== 'undefined' && position !== null) {
             this.element.css({
-                top: position.top,
+                top: position.top + 48,
                 left: position.left
             });
         }

@@ -32,10 +32,9 @@ function TextSelector(element, options) {
         var self = this;
         this.document = this.element.ownerDocument;
 
-        $(this.document.body)
-            .on("mouseup." + TEXTSELECTOR_NS, function (e) {
-                self._checkForEndSelection(e);
-            });
+        document.addEventListener("pointerup", (e) => {
+            self._checkForEndSelection(e);
+        });
     } else {
         console.warn("You created an instance of the TextSelector on an " +
                      "element that doesn't have an ownerDocument. This won't " +
@@ -78,11 +77,6 @@ TextSelector.prototype.captureDocumentSelection = function () {
             ranges.push(normedRange);
         }
     }
-
-    // BrowserRange#normalize() modifies the DOM structure and deselects the
-    // underlying text as a result. So here we remove the selected ranges and
-    // reapply the new ones.
-    selection.removeAllRanges();
 
     for (i = 0, len = rangesToIgnore.length; i < len; i++) {
         selection.addRange(rangesToIgnore[i]);
