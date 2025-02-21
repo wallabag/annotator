@@ -1,10 +1,11 @@
-var $, Util, evaluateXPath, findChild, fromNode, getNodeName, getNodePosition, simpleXPathJQuery, simpleXPathPure, toNode;
+"use strict";
 
-$ = require('jquery');
+var util = require('../util');
+var $ = util.$;
 
-Util = require('./util');
+var Util = require('./util');
 
-evaluateXPath = function(xp, root, nsResolver) {
+function evaluateXPath(xp, root, nsResolver) {
   var exception, idx, name, node, step, steps, _i, _len, _ref;
   if (root == null) {
     root = document;
@@ -30,7 +31,7 @@ evaluateXPath = function(xp, root, nsResolver) {
   }
 };
 
-simpleXPathJQuery = function($el, relativeRoot) {
+function simpleXPathJQuery($el, relativeRoot) {
   var jq;
   jq = $el.map(function() {
     var elem, idx, path, tagName;
@@ -48,7 +49,7 @@ simpleXPathJQuery = function($el, relativeRoot) {
   return jq.get();
 };
 
-simpleXPathPure = function($el, relativeRoot) {
+function simpleXPathPure($el, relativeRoot) {
   var getPathSegment, getPathTo, jq, rootNode;
   getPathSegment = function(node) {
     var name, pos;
@@ -79,7 +80,7 @@ simpleXPathPure = function($el, relativeRoot) {
   return jq.get();
 };
 
-findChild = function(node, type, index) {
+function findChild(node, type, index) {
   var child, children, found, name, _i, _len;
   if (!node.hasChildNodes()) {
     throw new Error("XPath error: node has no children!");
@@ -99,7 +100,7 @@ findChild = function(node, type, index) {
   throw new Error("XPath error: wanted child not found.");
 };
 
-getNodeName = function(node) {
+function getNodeName(node) {
   var nodeName;
   nodeName = node.nodeName.toLowerCase();
   switch (nodeName) {
@@ -114,7 +115,7 @@ getNodeName = function(node) {
   }
 };
 
-getNodePosition = function(node) {
+function getNodePosition(node) {
   var pos, tmp;
   pos = 0;
   tmp = node;
@@ -127,7 +128,7 @@ getNodePosition = function(node) {
   return pos;
 };
 
-fromNode = function($el, relativeRoot) {
+function fromNode($el, relativeRoot) {
   var exception, result;
   try {
     result = simpleXPathJQuery($el, relativeRoot);
@@ -139,7 +140,7 @@ fromNode = function($el, relativeRoot) {
   return result;
 };
 
-toNode = function(path, root) {
+function toNode(path, root) {
   var customResolver, namespace, node, segment;
   if (root == null) {
     root = document;
@@ -178,7 +179,5 @@ toNode = function(path, root) {
   }
 };
 
-module.exports = {
-  fromNode: fromNode,
-  toNode: toNode
-};
+exports.fromNode = fromNode;
+exports.toNode = toNode;

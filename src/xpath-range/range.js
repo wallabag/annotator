@@ -1,29 +1,30 @@
-var $, Range, Util, xpath,
+"use strict";
+
+var
   __hasProp = {}.hasOwnProperty,
   __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-xpath = require('./xpath');
+var xpath = require('./xpath');
 
-Util = require('./util');
+var Util = require('./util');
 
-$ = require('jquery');
+var util = require('../util');
+var $ = util.$;
 
-Range = {};
-
-Range.sniff = function(r) {
+function sniff(r) {
   if (r.commonAncestorContainer != null) {
-    return new Range.BrowserRange(r);
+    return new BrowserRange(r);
   } else if (typeof r.start === "string") {
-    return new Range.SerializedRange(r);
+    return new SerializedRange(r);
   } else if (r.start && typeof r.start === "object") {
-    return new Range.NormalizedRange(r);
+    return new NormalizedRange(r);
   } else {
     console.error("Could not sniff range type");
     return false;
   }
 };
 
-Range.RangeError = (function(_super) {
+var RangeError = (function(_super) {
   __extends(RangeError, _super);
 
   function RangeError(type, message, parent) {
@@ -37,7 +38,7 @@ Range.RangeError = (function(_super) {
 
 })(Error);
 
-Range.BrowserRange = (function() {
+var BrowserRange = (function() {
   function BrowserRange(obj) {
     this.commonAncestorContainer = obj.commonAncestorContainer;
     this.startContainer = obj.startContainer;
@@ -82,7 +83,7 @@ Range.BrowserRange = (function() {
     while (nr.commonAncestor.nodeType !== Util.NodeTypes.ELEMENT_NODE) {
       nr.commonAncestor = nr.commonAncestor.parentNode;
     }
-    return new Range.NormalizedRange(nr);
+    return new NormalizedRange(nr);
   };
 
   BrowserRange.prototype._normalizeStart = function(r) {
@@ -132,7 +133,7 @@ Range.BrowserRange = (function() {
 
 })();
 
-Range.NormalizedRange = (function() {
+var NormalizedRange = (function() {
   function NormalizedRange(obj) {
     this.commonAncestor = obj.commonAncestor;
     this.start = obj.start;
@@ -190,7 +191,7 @@ Range.NormalizedRange = (function() {
     };
     start = serialization(this.start);
     end = serialization(this.end, true);
-    return new Range.SerializedRange({
+    return new SerializedRange({
       start: start[0],
       end: end[0],
       startOffset: start[1],
@@ -223,7 +224,7 @@ Range.NormalizedRange = (function() {
 
 })();
 
-Range.SerializedRange = (function() {
+var SerializedRange = (function() {
   function SerializedRange(obj) {
     this.start = obj.start;
     this.startOffset = obj.startOffset;
@@ -241,10 +242,10 @@ Range.SerializedRange = (function() {
         node = xpath.toNode(this[p], root);
       } catch (_error) {
         e = _error;
-        throw new Range.RangeError(p, ("Error while finding " + p + " node: " + this[p] + ": ") + e, e);
+        throw new RangeError(p, ("Error while finding " + p + " node: " + this[p] + ": ") + e, e);
       }
       if (!node) {
-        throw new Range.RangeError(p, "Couldn't find " + p + " node: " + this[p]);
+        throw new RangeError(p, "Couldn't find " + p + " node: " + this[p]);
       }
       length = 0;
       targetOffset = this[p + 'Offset'];
@@ -263,7 +264,7 @@ Range.SerializedRange = (function() {
         }
       }
       if (range[p + 'Offset'] == null) {
-        throw new Range.RangeError("" + p + "offset", "Couldn't find offset " + this[p + 'Offset'] + " in element " + this[p]);
+        throw new RangeError("" + p + "offset", "Couldn't find offset " + this[p + 'Offset'] + " in element " + this[p]);
       }
     }
     contains = document.compareDocumentPosition != null ? function(a, b) {
@@ -283,7 +284,7 @@ Range.SerializedRange = (function() {
         return false;
       }
     });
-    return new Range.BrowserRange(range).normalize(root);
+    return new BrowserRange(range).normalize(root);
   };
 
   SerializedRange.prototype.serialize = function(root, ignoreSelector) {
@@ -303,4 +304,8 @@ Range.SerializedRange = (function() {
 
 })();
 
-module.exports = Range;
+exports.sniff = sniff;
+exports.RangeError = RangeError;
+exports.BrowserRange = BrowserRange;
+exports.NormalizedRange = NormalizedRange;
+exports.SerializedRange = SerializedRange;

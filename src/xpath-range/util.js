@@ -1,10 +1,9 @@
-var $, Util;
+"use strict";
 
-$ = require('jquery');
+var util = require('../util');
+var $ = util.$;
 
-Util = {};
-
-Util.NodeTypes = {
+var NodeTypes = {
   ELEMENT_NODE: 1,
   ATTRIBUTE_NODE: 2,
   TEXT_NODE: 3,
@@ -19,14 +18,14 @@ Util.NodeTypes = {
   NOTATION_NODE: 12
 };
 
-Util.getFirstTextNodeNotBefore = function(n) {
+function getFirstTextNodeNotBefore(n) {
   var result;
   switch (n.nodeType) {
-    case Util.NodeTypes.TEXT_NODE:
+    case NodeTypes.TEXT_NODE:
       return n;
-    case Util.NodeTypes.ELEMENT_NODE:
+    case NodeTypes.ELEMENT_NODE:
       if (n.firstChild != null) {
-        result = Util.getFirstTextNodeNotBefore(n.firstChild);
+        result = getFirstTextNodeNotBefore(n.firstChild);
         if (result != null) {
           return result;
         }
@@ -35,20 +34,20 @@ Util.getFirstTextNodeNotBefore = function(n) {
   }
   n = n.nextSibling;
   if (n != null) {
-    return Util.getFirstTextNodeNotBefore(n);
+    return getFirstTextNodeNotBefore(n);
   } else {
     return null;
   }
 };
 
-Util.getLastTextNodeUpTo = function(n) {
+function getLastTextNodeUpTo(n) {
   var result;
   switch (n.nodeType) {
-    case Util.NodeTypes.TEXT_NODE:
+    case NodeTypes.TEXT_NODE:
       return n;
-    case Util.NodeTypes.ELEMENT_NODE:
+    case NodeTypes.ELEMENT_NODE:
       if (n.lastChild != null) {
-        result = Util.getLastTextNodeUpTo(n.lastChild);
+        result = getLastTextNodeUpTo(n.lastChild);
         if (result != null) {
           return result;
         }
@@ -57,19 +56,19 @@ Util.getLastTextNodeUpTo = function(n) {
   }
   n = n.previousSibling;
   if (n != null) {
-    return Util.getLastTextNodeUpTo(n);
+    return getLastTextNodeUpTo(n);
   } else {
     return null;
   }
 };
 
-Util.getTextNodes = function(jq) {
+function getTextNodes(jq) {
   var getTextNodes;
   getTextNodes = function(node) {
     var nodes;
-    if (node && node.nodeType !== Util.NodeTypes.TEXT_NODE) {
+    if (node && node.nodeType !== NodeTypes.TEXT_NODE) {
       nodes = [];
-      if (node.nodeType !== Util.NodeTypes.COMMENT_NODE) {
+      if (node.nodeType !== NodeTypes.COMMENT_NODE) {
         node = node.lastChild;
         while (node) {
           nodes.push(getTextNodes(node));
@@ -82,17 +81,17 @@ Util.getTextNodes = function(jq) {
     }
   };
   return jq.map(function() {
-    return Util.flatten(getTextNodes(this));
+    return flatten(getTextNodes(this));
   });
 };
 
-Util.getGlobal = function() {
+function getGlobal() {
   return (function() {
     return this;
   })();
 };
 
-Util.contains = function(parent, child) {
+function contains(parent, child) {
   var node;
   node = child;
   while (node != null) {
@@ -104,7 +103,7 @@ Util.contains = function(parent, child) {
   return false;
 };
 
-Util.flatten = function(array) {
+function flatten(array) {
   var flatten;
   flatten = function(ary) {
     var el, flat, _i, _len;
@@ -118,4 +117,10 @@ Util.flatten = function(array) {
   return flatten(array);
 };
 
-module.exports = Util;
+exports.NodeTypes = NodeTypes;
+exports.getFirstTextNodeNotBefore = getFirstTextNodeNotBefore;
+exports.getLastTextNodeUpTo = getLastTextNodeUpTo;
+exports.getTextNodes = getTextNodes;
+exports.getGlobal = getGlobal;
+exports.contains = contains;
+exports.flatten = flatten;
