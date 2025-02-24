@@ -1,7 +1,7 @@
 // Disable cyclomatic complexity checking for this file
 // jshint -W074
 
-var xpath = require('xpath-range').xpath;
+var xpath = require('../src/xpath-range/xpath');
 
 var util = require('../src/util');
 var $ = util.$;
