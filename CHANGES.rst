@@ -1,3 +1,9 @@
+2.0.0-alpha.4
+=============
+
+- Bump jQuery to 3.7.1
+- Make changes needed for wallabag
+
 2.0.0-alpha.3
 =============
 
