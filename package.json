@@ -1,10 +1,10 @@
 {
   "name": "annotator",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "description": "Annotation for the web. Select text, images, or (nearly) anything else, and add your notes.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openannotation/annotator.git"
+    "url": "https://github.com/wallabag/annotator.git"
   },
   "dependencies": {
     "backbone-extend-standalone": "^0.1.2",
